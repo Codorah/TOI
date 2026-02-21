@@ -396,8 +396,8 @@
     .setup-preview-panel,
     .reference-panel {
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: color-mix(in srgb, var(--surface-2) 83%, white);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.4);
       padding: 0.82rem;
       min-height: 100%;
     }
@@ -407,6 +407,9 @@
       margin: 0 0 0.56rem;
       font-size: 0.98rem;
       font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
     #setup-preview-image,
@@ -414,10 +417,10 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: #060914;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+      border-radius: 2px;
+      border: 1px solid var(--accent);
+      background: #000;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
       cursor: zoom-in;
     }
 
@@ -425,15 +428,18 @@
       margin: 0;
       width: 100%;
       aspect-ratio: 1 / 1;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
+      border: 1px dashed var(--accent);
+      border-radius: 2px;
       display: grid;
       place-items: center;
-      color: var(--muted);
+      color: var(--accent);
       text-align: center;
       line-height: 1.36;
       padding: 1rem;
-      background: color-mix(in srgb, var(--surface) 90%, white);
+      background: rgba(0, 240, 255, 0.05);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.85rem;
     }
 
     .saved-puzzles {
@@ -468,12 +474,18 @@
 
     .saved-card {
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: color-mix(in srgb, var(--surface-2) 78%, white);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.6);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       min-width: 0;
+      transition: border-color 0.2s;
+    }
+
+    .saved-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
     }
 
     .saved-thumb {
@@ -539,11 +551,12 @@
     }
 
     .timer {
-      font-family: "Lucida Console", "Courier New", monospace;
-      font-size: clamp(1.34rem, 2.6vw, 2rem);
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
       font-weight: 800;
-      color: #ffd968;
-      letter-spacing: 0.03em;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px var(--accent);
     }
 
     .game-actions {
@@ -561,26 +574,29 @@
 
     .hud-pill {
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 2px;
       padding: 0.52rem 0.68rem;
-      background: color-mix(in srgb, var(--surface-2) 84%, white);
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: var(--muted);
       font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .hud-pill strong {
-      color: var(--text);
+      color: var(--accent);
       font-weight: 800;
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
     }
 
     .progress-track {
       width: 100%;
-      height: 9px;
-      background: color-mix(in srgb, var(--surface) 70%, black);
-      border-radius: 999px;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 2px;
       overflow: hidden;
       border: 1px solid var(--line);
       margin-bottom: 0.7rem;
@@ -589,7 +605,8 @@
     .progress-bar {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, var(--accent), #ff936a, var(--accent-2));
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
       transition: width 200ms ease;
     }
 
@@ -608,11 +625,11 @@
       width: 100%;
       max-width: 900px;
       aspect-ratio: 1 / 1;
-      border: 2px solid color-mix(in srgb, var(--line) 90%, white);
-      border-radius: 14px;
-      background: #050811;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      background: #020408;
       touch-action: none;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.8);
       display: block;
     }
 
@@ -636,11 +653,11 @@
 
     .modal-content {
       width: min(640px, 100%);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
       background: var(--surface);
-      padding: 1rem;
-      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.2);
     }
 
     .settings-content {
@@ -663,30 +680,35 @@
     .toggle-row {
       margin-top: 0.9rem;
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 2px;
       padding: 0.66rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: color-mix(in srgb, var(--surface-2) 86%, white);
+      background: rgba(0, 0, 0, 0.4);
     }
 
     .toggle-row input {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       accent-color: var(--accent);
     }
 
     #revealed-message {
-      margin-top: 0.7rem;
-      border-radius: 12px;
-      padding: 0.9rem;
-      background: #fff;
-      color: #111;
-      line-height: 1.45;
-      font-size: 1.03rem;
+      margin-top: 1rem;
+      border-radius: 2px;
+      padding: 1.2rem;
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      line-height: 1.6;
+      font-size: 1.1rem;
+      font-family: "Courier New", Courier, monospace;
       white-space: pre-wrap;
       word-break: break-word;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+      text-align: center;
+      letter-spacing: 0.05em;
     }
 
     .lightbox {
@@ -701,20 +723,20 @@
 
     .lightbox-content {
       width: min(980px, 100%);
-      border: 1px solid var(--line);
-      border-radius: 14px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
       background: var(--surface);
       padding: 0.88rem;
-      box-shadow: var(--shadow);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.2);
     }
 
     #reference-lightbox-image {
       width: 100%;
       max-height: 80vh;
       object-fit: contain;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #060914;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      background: #000;
     }
 
     @media (max-width: 980px) {
@@ -749,7 +771,7 @@
       }
 
       .splash-card {
-        border-radius: 16px;
+        border-radius: 2px;
         padding: 1rem;
       }
 
@@ -760,7 +782,7 @@
       .brand-mark {
         width: 38px;
         height: 38px;
-        border-radius: 10px;
+        border-radius: 2px;
         font-size: 0.92rem;
       }
 
@@ -777,7 +799,7 @@
       }
 
       canvas {
-        border-radius: 11px;
+        border-radius: 2px;
       }
 
       .setup-preview-panel,
