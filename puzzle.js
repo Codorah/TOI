@@ -521,7 +521,7 @@
       playBtn.className = "btn btn-main";
       playBtn.dataset.action = "play-gallery";
       playBtn.dataset.gid = item.id;
-      playBtn.textContent = "LANCER L'EXTRATION";
+      playBtn.textContent = "JOUER";
       actions.appendChild(playBtn);
 
       body.appendChild(actions);
@@ -569,7 +569,7 @@
 
     // Load as a direct puzzle rather than from packed payload
     enterApp();
-    startPuzzle(item.img, item.diff, "Archive réseau déchiffrée avec succès. Bien joué.", null);
+    startPuzzle(item.img, item.diff, "Vous avez résolu le puzzle avec succès, félicitations !", null);
   }
 
   function normalizeSettings(raw) {

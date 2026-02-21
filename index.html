@@ -12,39 +12,39 @@
   <link rel="apple-touch-icon" sizes="192x192" href="icons/toi-192.png" />
   <style>
     :root {
-      --bg: #09090b;
-      --bg-grad-1: #180b2a;
-      --bg-grad-2: #05141e;
-      --surface: #121216;
-      --surface-2: #1f1f26;
-      --text: #f0f0f5;
-      --muted: #8b8e99;
-      --line: rgba(252, 238, 12, 0.25);
-      --accent: #fcee0c;
-      --accent-2: #02d7f2;
-      --btn-secondary: rgba(2, 215, 242, 0.1);
-      --warn: #ff003c;
-      --ok: #39ff14;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-      --glow: 0 0 15px rgba(252, 238, 12, 0.4);
+      --bg: #f9fafb;
+      --bg-grad-1: #ffffff;
+      --bg-grad-2: #f3f4f6;
+      --surface: #ffffff;
+      --surface-2: #f0fdf4;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #10b981;
+      --accent-2: #3b82f6;
+      --btn-secondary: #f3f4f6;
+      --warn: #f59e0b;
+      --ok: #10b981;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --glow: 0 4px 14px rgba(16, 185, 129, 0.2);
     }
 
-    html[data-theme="light"] {
-      --bg: #f4f4f4;
-      --bg-grad-1: #e9e9e9;
-      --bg-grad-2: #ffffff;
-      --surface: #ffffff;
-      --surface-2: #ebebeb;
-      --text: #1a1a1a;
-      --muted: #666666;
-      --line: rgba(255, 0, 60, 0.2);
-      --accent: #ff003c;
-      --accent-2: #02d7f2;
-      --btn-secondary: rgba(2, 215, 242, 0.1);
-      --warn: #ff8c00;
-      --ok: #00cc44;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      --glow: 0 0 15px rgba(255, 0, 60, 0.3);
+    html[data-theme="dark"] {
+      --bg: #111827;
+      --bg-grad-1: #1f2937;
+      --bg-grad-2: #0f172a;
+      --surface: #1f2937;
+      --surface-2: #374151;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --line: #374151;
+      --accent: #10b981;
+      --accent-2: #60a5fa;
+      --btn-secondary: #374151;
+      --warn: #fbbf24;
+      --ok: #34d399;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --glow: 0 4px 14px rgba(16, 185, 129, 0.2);
     }
 
     * {
@@ -77,25 +77,13 @@
 
     .splash-card {
       width: min(760px, 100%);
-      border: 1px solid var(--accent-2);
-      border-radius: 4px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
       padding: clamp(2rem, 5vw, 3rem);
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(2, 215, 242, 0.1);
+      background: var(--surface);
+      box-shadow: var(--shadow);
       text-align: center;
       position: relative;
-    }
-
-    .splash-card::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      right: -1px;
-      height: 4px;
-      background: var(--accent);
-      box-shadow: var(--glow);
     }
 
     .splash-badge {
@@ -154,10 +142,9 @@
 
     .card {
       border: 1px solid var(--line);
-      border-radius: 4px;
-      background: rgba(10, 15, 29, 0.75);
+      border-radius: 12px;
+      background: var(--surface);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
     }
 
     .brand {
@@ -169,12 +156,12 @@
     .brand-mark {
       width: 44px;
       height: 44px;
-      border-radius: 4px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
       font-size: 1rem;
       font-weight: 800;
-      color: #000;
+      color: #fff;
       background: var(--accent);
       box-shadow: var(--glow);
       letter-spacing: 0.1em;
@@ -183,9 +170,8 @@
     .brand-copy h1 {
       margin: 0;
       font-size: 1.28rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-shadow: 2px 2px 0px rgba(2, 215, 242, 0.5);
+      letter-spacing: 0.05em;
+      text-shadow: none;
     }
 
     .brand-copy p {
@@ -204,40 +190,23 @@
     }
 
     .btn {
-      border: 1px solid var(--accent);
-      border-radius: 2px;
-      padding: 0.74rem 1.2rem;
+      border: 1px solid transparent;
+      border-radius: 20px;
+      padding: 0.65rem 1.4rem;
       font-size: 0.85rem;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
-      color: var(--accent);
-      background: transparent;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      color: var(--text);
+      background: var(--btn-secondary);
+      letter-spacing: 0.02em;
       transition: all 0.2s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: all 0.4s ease;
-    }
-
-    .btn:hover::before {
-      left: 100%;
-    }
-
     .btn:hover {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 0 15px var(--accent);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
     }
 
     .btn:active {
@@ -245,22 +214,29 @@
     }
 
     .btn-main {
-      background: rgba(252, 238, 12, 0.1);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-main:hover {
+      background: var(--accent);
+      box-shadow: var(--glow);
     }
 
     .btn-secondary {
-      border-color: var(--accent-2);
-      color: var(--accent-2);
+      background: var(--btn-secondary);
+      color: var(--text);
+      border: 1px solid var(--line);
     }
 
     .btn-secondary:hover {
-      background: var(--accent-2);
-      color: #000;
-      box-shadow: 0 0 15px var(--accent-2);
+      background: var(--line);
+      color: var(--text);
     }
 
     .btn-ghost {
       border: 1px solid transparent;
+      background: transparent;
       color: var(--muted);
     }
 
@@ -309,20 +285,16 @@
     .setup-form h2 {
       margin: 0;
       font-size: clamp(1.2rem, 3.3vw, 1.6rem);
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+      color: var(--text);
+      letter-spacing: -0.01em;
+      font-weight: 700;
     }
 
     .setup-hint {
-      margin: 0 0 1.5rem;
+      margin: 0.2rem 0 1.5rem;
       color: var(--muted);
-      line-height: 1.4;
-      font-size: 0.85rem;
-      font-family: inherit;
-      border-left: 2px solid var(--accent);
-      padding-left: 0.8rem;
+      line-height: 1.5;
+      font-size: 0.9rem;
     }
 
     .form-group {
@@ -330,99 +302,66 @@
     }
 
     .box-bracket {
-      padding: 0.8rem;
+      padding: 1rem;
       border: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.3);
+      background: var(--surface-2);
+      border-radius: 12px;
       position: relative;
-      transition: border-color 0.2s;
-    }
-
-    .box-bracket::before,
-    .box-bracket::after {
-      content: '';
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border: 2px solid var(--accent);
-      transition: all 0.3s;
-    }
-
-    .box-bracket::before {
-      top: -1px;
-      left: -1px;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    .box-bracket::after {
-      bottom: -1px;
-      right: -1px;
-      border-left: none;
-      border-top: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .box-bracket:focus-within {
-      border-color: rgba(0, 240, 255, 0.3);
-    }
-
-    .box-bracket:focus-within::before,
-    .box-bracket:focus-within::after {
-      width: 20px;
-      height: 20px;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
 
     .box-bracket label {
       display: inline-block;
       margin: 0 0 0.5rem;
-      color: var(--accent);
-      font-size: 0.70rem;
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      background: rgba(0, 240, 255, 0.1);
-      padding: 0.2rem 0.5rem;
-      border-radius: 2px;
+      letter-spacing: 0.05em;
     }
 
     .box-bracket input[type="file"],
     .box-bracket select,
     .box-bracket textarea {
       width: 100%;
-      border: none;
-      background: transparent;
+      border: 1px solid var(--line);
+      background: var(--surface);
       color: var(--text);
-      border-radius: 0;
-      padding: 0.5rem 0;
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
       font-size: 0.94rem;
       outline: none;
-      font-family: "Courier New", Courier, monospace;
-      border-bottom: 1px dashed var(--line);
-      transition: border-color 0.2s;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .box-bracket input[type="file"]:focus,
     .box-bracket select:focus,
     .box-bracket textarea:focus {
-      border-bottom: 1px solid var(--accent);
-      box-shadow: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
 
     input[type="file"]::file-selector-button {
       margin-right: 0.6rem;
-      border: 1px solid var(--accent);
-      border-radius: 2px;
-      padding: 0.42rem 0.72rem;
-      font-weight: 700;
-      background: transparent;
-      text-transform: uppercase;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.42rem 0.8rem;
+      font-weight: 600;
+      background: var(--btn-secondary);
       font-size: 0.75rem;
-      color: var(--accent);
+      color: var(--text);
       cursor: pointer;
       transition: all 0.2s;
     }
 
     input[type="file"]::file-selector-button:hover {
-      background: var(--accent);
-      color: #000;
+      background: var(--line);
     }
 
     textarea {
@@ -510,14 +449,13 @@
       border-radius: 2px;
       display: grid;
       place-items: center;
-      color: var(--accent);
+      color: var(--muted);
       text-align: center;
-      line-height: 1.36;
-      padding: 1rem;
-      background: rgba(0, 240, 255, 0.05);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.85rem;
+      line-height: 1.5;
+      padding: 1.5rem;
+      background: var(--surface-2);
+      font-size: 0.9rem;
+      border-radius: 12px;
     }
 
     .saved-puzzles {
@@ -552,18 +490,19 @@
 
     .saved-card {
       border: 1px solid var(--line);
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      background: var(--surface-2);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       min-width: 0;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
     }
 
     .saved-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+      border-color: var(--accent-2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
     }
 
     .saved-thumb {
@@ -584,24 +523,25 @@
 
     .saved-title {
       margin: 0;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      color: color-mix(in srgb, var(--text) 95%, white);
+      color: var(--text);
     }
 
     .saved-meta {
       margin: 0;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
 
     .saved-message {
       margin: 0;
-      font-size: 0.82rem;
-      color: color-mix(in srgb, var(--text) 90%, white);
+      font-size: 0.85rem;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      opacity: 0.8;
     }
 
     .saved-actions {
@@ -629,12 +569,11 @@
     }
 
     .timer {
-      font-family: "Courier New", Courier, monospace;
+      font-family: inherit;
       font-size: clamp(1.5rem, 3vw, 2.5rem);
       font-weight: 800;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 10px var(--accent);
+      color: var(--text);
+      letter-spacing: -0.02em;
     }
 
     .game-actions {
@@ -652,40 +591,38 @@
 
     .hud-pill {
       border: 1px solid var(--line);
-      border-radius: 2px;
-      padding: 0.52rem 0.68rem;
-      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      padding: 0.52rem 1rem;
+      background: var(--surface);
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: var(--muted);
       font-size: 0.88rem;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .hud-pill strong {
-      color: var(--accent);
+      color: var(--text);
       font-weight: 800;
-      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
     }
 
     .progress-track {
       width: 100%;
-      height: 6px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 2px;
+      height: 8px;
+      background: var(--surface-2);
+      border-radius: 4px;
       overflow: hidden;
-      border: 1px solid var(--line);
-      margin-bottom: 0.7rem;
+      margin-bottom: 1rem;
     }
 
     .progress-bar {
       width: 0%;
       height: 100%;
       background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      transition: width 200ms ease;
+      transition: width 0.3s ease;
     }
 
     .game-layout {
@@ -703,11 +640,11 @@
       width: 100%;
       max-width: 900px;
       aspect-ratio: 1 / 1;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      background: #020408;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-2);
       touch-action: none;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.8);
+      box-shadow: var(--shadow);
       display: block;
     }
 
@@ -722,7 +659,8 @@
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
       display: grid;
       place-items: center;
       padding: 0.9rem;
@@ -731,11 +669,11 @@
 
     .modal-content {
       width: min(640px, 100%);
-      border: 1px solid var(--accent);
-      border-radius: 4px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
       background: var(--surface);
-      padding: 1.5rem;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.2);
+      padding: 2rem;
+      box-shadow: var(--shadow);
     }
 
     .settings-content {
@@ -774,19 +712,17 @@
 
     #revealed-message {
       margin-top: 1rem;
-      border-radius: 2px;
+      border-radius: 8px;
       padding: 1.2rem;
-      background: rgba(0, 240, 255, 0.05);
-      border: 1px solid var(--accent);
-      color: var(--accent);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      color: var(--text);
       line-height: 1.6;
       font-size: 1.1rem;
-      font-family: "Courier New", Courier, monospace;
+      font-family: inherit;
       white-space: pre-wrap;
       word-break: break-word;
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
       text-align: center;
-      letter-spacing: 0.05em;
     }
 
     .lightbox {
@@ -801,20 +737,19 @@
 
     .lightbox-content {
       width: min(980px, 100%);
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      background: var(--surface);
-      padding: 0.88rem;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.2);
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      padding: 0;
+      box-shadow: var(--shadow);
     }
 
     #reference-lightbox-image {
       width: 100%;
       max-height: 80vh;
       object-fit: contain;
-      border: 1px solid var(--accent);
-      border-radius: 2px;
-      background: #000;
+      border-radius: 12px;
+      background: transparent;
     }
 
     @media (max-width: 980px) {
@@ -849,8 +784,8 @@
       }
 
       .splash-card {
-        border-radius: 2px;
-        padding: 1rem;
+        border-radius: 12px;
+        padding: 1.5rem;
       }
 
       .splash-card h2 {
@@ -860,16 +795,16 @@
       .brand-mark {
         width: 38px;
         height: 38px;
-        border-radius: 2px;
-        font-size: 0.92rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
       }
 
       .brand-copy h1 {
-        font-size: 1.06rem;
+        font-size: 1.1rem;
       }
 
       .brand-copy p {
-        font-size: 0.82rem;
+        font-size: 0.75rem;
       }
 
       .btn {
@@ -925,19 +860,19 @@
       <div class="setup-layout">
         <div class="setup-form">
           <div class="game-hud-header">
-            <h2>INITIALISATION SYSTÈME</h2>
+            <h2>Créer un Puzzle Secret</h2>
             <div class="hud-line"></div>
           </div>
-          <p class="setup-hint">Sélectionnez la cible, définissez le pare-feu cryptographique et insérez les données
-            secrètes.</p>
+          <p class="setup-hint" data-i18n="create_subtitle">Créez votre puzzle personnalisé, partagez-le, et laissez la
+            magie opérer.</p>
 
           <div class="form-group box-bracket">
-            <label for="image-input">[ ASSET CIBLE ]</label>
+            <label for="image-input" data-i18n="label_image">Image</label>
             <input id="image-input" type="file" accept="image/*" />
           </div>
 
           <div class="form-group box-bracket">
-            <label for="difficulty">[ NIVEAU DE CHIFFREMENT ]</label>
+            <label for="difficulty" data-i18n="label_difficulty">Difficulté</label>
             <select id="difficulty">
               <option value="4" data-diff="4">STANDARD (4x4)</option>
               <option value="6" data-diff="6">AVANCÉ (6x6)</option>
@@ -947,8 +882,9 @@
           </div>
 
           <div class="form-group box-bracket">
-            <label for="secret-message">[ DONNÉES DE TRANSMISSION ]</label>
-            <textarea id="secret-message" placeholder="Entrez la clé de données secrètes ici..."></textarea>
+            <label for="secret-message" data-i18n="label_message">Message Secret (Optionnel)</label>
+            <textarea id="secret-message"
+              placeholder="Votre message apparaîtra une fois le puzzle résolu..."></textarea>
           </div>
 
           <div class="row">
@@ -981,7 +917,7 @@
     </section>
 
     <section id="gallery-section" class="card saved-puzzles">
-      <h3 class="saved-head" data-i18n="gallery_title">BANQUES DE DONNÉES INTRUSIVES (Jouer)</h3>
+      <h3 class="saved-head" data-i18n="gallery_title">Jouer à un puzzle</h3>
       <div id="gallery-list" class="saved-grid">
         <!-- Gallery cards will be injected here via JS -->
       </div>
