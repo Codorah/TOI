@@ -1,12 +1,12 @@
-﻿const CACHE_NAME = "toi-puzzle-v4";
+﻿const CACHE_NAME = "toi-puzzle-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./puzzle.js",
   "./puzzle.js?v=20260221-1",
   "./manifest.json",
-  "./icons/toi-192.svg",
-  "./icons/toi-512.svg"
+  "./icons/toi-192.png",
+  "./icons/toi-512.png"
 ];
 
 self.addEventListener("install", (event) => {
