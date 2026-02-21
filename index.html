@@ -484,8 +484,8 @@
 
     .saved-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.7rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
     }
 
     .saved-card {
@@ -663,16 +663,17 @@
       backdrop-filter: blur(4px);
       display: grid;
       place-items: center;
-      padding: 0.9rem;
+      padding: 1rem;
       z-index: 60;
     }
 
     .modal-content {
       width: min(640px, 100%);
+      max-width: 95vw;
       border: 1px solid var(--line);
       border-radius: 16px;
       background: var(--surface);
-      padding: 2rem;
+      padding: clamp(1.2rem, 5vw, 2rem);
       box-shadow: var(--shadow);
     }
 
@@ -694,20 +695,27 @@
     }
 
     .toggle-row {
-      margin-top: 0.9rem;
+      margin-top: 1rem;
       border: 1px solid var(--line);
-      border-radius: 2px;
-      padding: 0.66rem;
+      border-radius: 12px;
+      padding: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(0, 0, 0, 0.4);
+      gap: 0.8rem;
+      background: var(--surface-2);
+      transition: border-color 0.2s;
     }
 
-    .toggle-row input {
-      width: 16px;
-      height: 16px;
+    .toggle-row:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .toggle-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
       accent-color: var(--accent);
+      cursor: pointer;
     }
 
     #revealed-message {
@@ -874,10 +882,16 @@
           <div class="form-group box-bracket">
             <label for="difficulty" data-i18n="label_difficulty">Difficulté</label>
             <select id="difficulty">
-              <option value="4" data-diff="4">STANDARD (4x4)</option>
-              <option value="6" data-diff="6">AVANCÉ (6x6)</option>
-              <option value="8" data-diff="8">COMPLEXE (8x8)</option>
-              <option value="10" data-diff="10">EXTRÊME (10x10)</option>
+              <optgroup label="Modes Hors Ligne (Standard)">
+                <option value="4" data-diff="4">STANDARD (4x4)</option>
+                <option value="6" data-diff="6">AVANCÉ (6x6)</option>
+                <option value="8" data-diff="8">COMPLEXE (8x8)</option>
+                <option value="10" data-diff="10">EXTRÊME (10x10)</option>
+              </optgroup>
+              <optgroup label="Modes En Ligne Uniquement">
+                <option value="20" data-diff="20">TITAN (20x20)</option>
+                <option value="50" data-diff="50">INSANE (50x50)</option>
+              </optgroup>
             </select>
           </div>
 
@@ -981,27 +995,30 @@
     <div class="modal-content settings-content">
       <div class="modal-head">
         <h2 data-i18n="settings">Parametres</h2>
-        <button id="close-settings-top" class="btn btn-ghost" type="button" data-i18n="close">Fermer</button>
+        <button id="close-settings-top" class="btn btn-ghost" type="button" aria-label="Fermer">✕</button>
       </div>
 
-      <label for="profile-name" data-i18n="profile_name">Nom profil</label>
-      <input id="profile-name" type="text" maxlength="32" data-i18n-placeholder="profile_placeholder"
-        placeholder="Ton nom" />
+      <div class="form-group box-bracket" style="margin-top: 1.5rem;">
+        <label for="profile-name" data-i18n="profile_name">Nom du profil</label>
+        <input id="profile-name" type="text" placeholder="Votre nom" />
+      </div>
 
-      <label for="language-select" data-i18n="language">Langue</label>
-      <select id="language-select">
-        <option value="fr">Francais</option>
-        <option value="en">English</option>
-      </select>
+      <div class="form-group box-bracket">
+        <label for="language-select" data-i18n="language">Langue</label>
+        <select id="language-select">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </div>
 
-      <label class="toggle-row" for="dark-mode-toggle">
+      <label class="toggle-row">
         <input id="dark-mode-toggle" type="checkbox" />
         <span data-i18n="dark_mode">Mode sombre</span>
       </label>
 
-      <div class="row">
-        <button id="save-settings-btn" class="btn btn-main" type="button" data-i18n="save">Sauvegarder</button>
+      <div class="row" style="margin-top: 2rem;">
         <button id="close-settings-btn" class="btn btn-ghost" type="button" data-i18n="close">Fermer</button>
+        <button id="save-settings-btn" class="btn btn-main" type="button" data-i18n="save">Sauvegarder</button>
       </div>
     </div>
   </div>

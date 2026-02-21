@@ -28,6 +28,18 @@
       diff: "6",
       title: "Réseau Neural",
       img: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      id: "gal-03",
+      diff: "20",
+      title: "Mégapole (Titan)",
+      img: "https://images.unsplash.com/photo-1480796927426-f609979314bd?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      id: "gal-04",
+      diff: "50",
+      title: "Fractale (Insane)",
+      img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"
     }
   ];
 
@@ -101,7 +113,8 @@
       status_install_help: "Chrome: menu > Installer l'application.",
       local_default_message: "Puzzle local sans message secret.",
       status_saved_puzzle: "Puzzle ajoute a Mes puzzles.",
-      diff: { "4": "Facile (4x4)", "6": "Moyen (6x6)", "8": "Difficile (8x8)", "10": "Expert (10x10)" }
+      status_offline_diff: "Les modes de difficulté supérieurs à 10x10 (Titan, Insane) nécessitent une connexion Internet.",
+      diff: { "4": "Facile (4x4)", "6": "Moyen (6x6)", "8": "Difficile (8x8)", "10": "Expert (10x10)", "20": "Titan (20x20)", "50": "Insane (50x50)" }
     },
     en: {
       splash_title: "Welcome to Toi",
@@ -169,7 +182,8 @@
       status_install_help: "Chrome: menu > Install app.",
       local_default_message: "Local puzzle without secret message.",
       status_saved_puzzle: "Puzzle added to My puzzles.",
-      diff: { "4": "Easy (4x4)", "6": "Medium (6x6)", "8": "Hard (8x8)", "10": "Expert (10x10)" }
+      status_offline_diff: "Difficulty modes higher than 10x10 (Titan, Insane) require an internet connection.",
+      diff: { "4": "Easy (4x4)", "6": "Medium (6x6)", "8": "Hard (8x8)", "10": "Expert (10x10)", "20": "Titan (20x20)", "50": "Insane (50x50)" }
     }
   };
 
@@ -1142,6 +1156,14 @@
       setStatusKey("status_need", "warn");
       return;
     }
+
+    // Check if offline and trying to use extreme difficulty
+    const diffVal = parseInt(el.difficulty.value, 10);
+    if (!navigator.onLine && diffVal > 10) {
+      window.alert(t("status_offline_diff"));
+      return;
+    }
+
     const payload = {
       m: encodeText(msg || t("local_default_message")),
       d: el.difficulty.value,
@@ -1157,6 +1179,13 @@
     const msg = el.message.value.trim();
     if (!imageData || !msg) {
       setStatusKey("status_need", "warn");
+      return;
+    }
+
+    // Check if offline and trying to use extreme difficulty
+    const diffVal = parseInt(el.difficulty.value, 10);
+    if (!navigator.onLine && diffVal > 10) {
+      window.alert(t("status_offline_diff"));
       return;
     }
 
