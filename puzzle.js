@@ -9,7 +9,7 @@
   const MAX_URL_DATA = 6500;
   const SHARE_IMAGE_MAX_DIM = 960;
   const SHARE_IMAGE_QUALITY = 0.82;
-  const SNAP_RATIO = 0.18; // Légèrement augmenté pour faciliter le mobile
+  const SNAP_RATIO = 0.18; 
   const JIGSAW_TAB_RATIO = 0.22;
   const JIGSAW_HIT_PADDING_RATIO = 0.24;
   const ROTATE_STEP = 90;
@@ -262,7 +262,7 @@
     currentPacked: ""
   };
 
-  // --- Helpers ---
+  // --- HELPERS ---
   const dict = () => TXT[state.settings.language] || TXT.fr;
   const t = (k, vars = {}) => {
     let str = dict()[k] || TXT.fr[k] || k;
@@ -273,6 +273,7 @@
   };
 
   const setStatus = (text, type = "") => {
+    if (!el.status) return;
     el.status.textContent = text;
     el.status.className = "status" + (type ? " " + type : "");
   };
@@ -296,123 +297,57 @@
   const encodePayload = (payload) => encodeText(JSON.stringify(payload));
   const decodePayload = (b64) => JSON.parse(decodeText(b64));
 
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
   const makeId = () => ((window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : (String(Date.now()) + "_" + Math.random().toString(36).slice(2)));
 
-  // --- Core Logic ---
-  function createShareLinkFromPacked(packed) {
-    const url = new URL(window.location.href);
-    url.search = "";
-    if (packed.length <= MAX_URL_DATA) {
-      url.searchParams.set("data", packed);
-      return { url: url.toString(), modeKey: "share_mode_data" };
-    }
-    const sid = makeId();
-    localStorage.setItem(PAYLOAD_PREFIX + sid, packed);
-    url.searchParams.set("sid", sid);
-    return { url: url.toString(), modeKey: "share_mode_local" };
-  }
-
-  function loadHintBank() {
+  // --- DATA MANAGEMENT ---
+  function loadSettings() {
     try {
-      const raw = localStorage.getItem(HINT_BANK_KEY);
-      const value = Number(raw);
-      return (Number.isFinite(value) && value >= 0) ? Math.floor(value) : HINT_TOTAL;
-    } catch { return HINT_TOTAL; }
+      const parsed = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null");
+      return { ...DEFAULT_SETTINGS, ...(parsed || {}) };
+    } catch { return { ...DEFAULT_SETTINGS }; }
   }
 
-  function saveHintBank() {
-    localStorage.setItem(HINT_BANK_KEY, String(state.hintsRemaining));
+  function saveSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings));
   }
 
   function loadPuzzlesLibrary() {
     try {
       const raw = localStorage.getItem(PUZZLES_LIBRARY_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.filter(e => e && e.id && e.packed) : [];
+      return raw ? JSON.parse(raw) : [];
     } catch { return []; }
   }
 
   function savePuzzlesLibrary(entries) {
-    let list = Array.isArray(entries) ? entries.slice(0, MAX_SAVED_PUZZLES) : [];
-    while (list.length > 0) {
-      try {
-        localStorage.setItem(PUZZLES_LIBRARY_KEY, JSON.stringify(list));
-        return list;
-      } catch { list.pop(); }
-    }
-    try { localStorage.removeItem(PUZZLES_LIBRARY_KEY); } catch {}
-    return [];
+    localStorage.setItem(PUZZLES_LIBRARY_KEY, JSON.stringify(entries.slice(0, MAX_SAVED_PUZZLES)));
   }
 
-  function upsertPackedPuzzle(packed) {
-    let entries = loadPuzzlesLibrary().filter(e => e.packed !== packed);
-    entries.unshift({ id: makeId(), createdAt: Date.now(), packed });
-    entries = savePuzzlesLibrary(entries);
-    renderPuzzlesLibrary(entries);
-  }
-
-  function removePuzzleFromLibrary(id) {
-    const entries = loadPuzzlesLibrary().filter(e => e.id !== id);
-    savePuzzlesLibrary(entries);
-    renderPuzzlesLibrary();
-  }
-
-  function formatSavedDate(value) {
-    const dateValue = typeof value === "number" ? value : Date.now();
-    const locale = state.settings.language === "fr" ? "fr-FR" : "en-US";
-    return new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(dateValue);
-  }
-
-  function setShareLink(url, modeKey) {
-    el.shareLink.value = url;
-    el.linkMode.textContent = t(modeKey);
-    el.linkContainer.hidden = false;
-  }
-
-  function updateMyPuzzlesToggle() {
-    if (!el.toggleMyPuzzlesBtn) return;
-    el.toggleMyPuzzlesBtn.textContent = el.myPuzzlesSection.hidden ? t("my_puzzles_toggle_open") : t("my_puzzles_toggle_close");
-  }
-
-  function toggleMyPuzzlesSection() {
-    el.myPuzzlesSection.hidden = !el.myPuzzlesSection.hidden;
-    updateMyPuzzlesToggle();
-  }
-
-  function renderPuzzlesLibrary(optEntries) {
-    const entries = optEntries || loadPuzzlesLibrary();
+  // --- UI RENDERERS ---
+  function renderPuzzlesLibrary() {
+    const entries = loadPuzzlesLibrary();
     el.myPuzzlesList.innerHTML = "";
     if (!entries.length) {
-      el.myPuzzlesList.hidden = true;
       el.myPuzzlesEmpty.hidden = false;
       return;
     }
+    el.myPuzzlesEmpty.hidden = true;
     entries.forEach(entry => {
       try {
         const payload = decodePayload(entry.packed);
-        const msg = decodeText(payload.m);
-        const diffLabel = dict().diff[String(payload.d)] || payload.d + "x" + payload.d;
         const card = document.createElement("article");
         card.className = "saved-card";
         card.innerHTML = `
-          <img class="saved-thumb" src="${payload.i}" alt="Puzzle">
+          <img class="saved-thumb" src="${payload.i}">
           <div class="saved-body">
-            <p class="saved-title">${t("saved_puzzle", { diff: diffLabel })}</p>
-            <p class="saved-meta">${t("saved_on", { date: formatSavedDate(entry.createdAt) })}</p>
-            <p class="saved-message">${msg || t("local_default_message")}</p>
+            <p class="saved-title">Puzzle ${payload.d}x${payload.d}</p>
             <div class="saved-actions">
               <button class="btn btn-main" data-action="replay" data-pid="${entry.id}">${t("replay_puzzle")}</button>
-              <button class="btn btn-secondary" data-action="copy" data-pid="${entry.id}">${t("copy")}</button>
               <button class="btn btn-ghost" data-action="delete" data-pid="${entry.id}">${t("delete_puzzle")}</button>
             </div>
           </div>`;
         el.myPuzzlesList.appendChild(card);
       } catch {}
     });
-    el.myPuzzlesList.hidden = false;
-    el.myPuzzlesEmpty.hidden = true;
   }
 
   function renderStaticGallery() {
@@ -422,60 +357,16 @@
       const card = document.createElement("article");
       card.className = "saved-card";
       card.innerHTML = `
-        <img class="saved-thumb" src="${item.img}" alt="${item.title}">
+        <img class="saved-thumb" src="${item.img}">
         <div class="saved-body">
           <p class="saved-title">${item.title}</p>
-          <p class="saved-meta" style="color:var(--accent)">Diff.: ${dict().diff[item.diff]}</p>
-          <div class="saved-actions">
-            <button class="btn btn-main" data-action="play-gallery" data-gid="${item.id}">JOUER</button>
-          </div>
+          <button class="btn btn-main" data-action="play-gallery" data-gid="${item.id}">JOUER</button>
         </div>`;
       el.galleryList.appendChild(card);
     });
   }
 
-  async function handleLibraryAction(action, pid) {
-    const entries = loadPuzzlesLibrary();
-    const entry = entries.find(e => e.id === pid);
-    if (!entry) return;
-    if (action === "delete") removePuzzleFromLibrary(pid);
-    if (action === "replay") { enterApp(); loadPuzzle(decodePayload(entry.packed)); }
-    if (action === "copy") {
-      const s = createShareLinkFromPacked(entry.packed);
-      setShareLink(s.url, s.modeKey);
-      await navigator.clipboard.writeText(s.url);
-      setStatusKey("status_copied", "ok");
-    }
-  }
-
-  function handleGalleryAction(gid) {
-    const item = PRELOADED_GALLERY.find(g => g.id === gid);
-    if (item) { enterApp(); startPuzzle(item.img, item.diff, "Félicitations !", null); }
-  }
-
-  // --- UI & Settings ---
-  function applyTheme() {
-    const theme = state.settings.darkMode ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", theme);
-    if (el.metaThemeColor) el.metaThemeColor.setAttribute("content", theme === "dark" ? THEME_COLORS.dark : THEME_COLORS.light);
-  }
-
-  function applySettings() {
-    applyTheme();
-    document.documentElement.lang = state.settings.language;
-    document.querySelectorAll("[data-i18n]").forEach(n => n.textContent = t(n.getAttribute("data-i18n")));
-    document.querySelectorAll("[data-i18n-placeholder]").forEach(n => n.setAttribute("placeholder", t(n.getAttribute("data-i18n-placeholder"))));
-    const labels = dict().diff;
-    el.difficulty.querySelectorAll("option[data-diff]").forEach(o => {
-      const v = o.getAttribute("data-diff");
-      o.textContent = labels[v] || v + "x" + v;
-    });
-    el.welcomeLine.textContent = t("welcome_user", { name: state.settings.profileName || t("default_profile") });
-    renderPuzzlesLibrary();
-    updateMyPuzzlesToggle();
-  }
-
-  // --- Canvas Engine (Optimisé Mobile) ---
+  // --- CORE PUZZLE ENGINE ---
   function setupCanvas() {
     const panelWidth = el.puzzlePanel ? el.puzzlePanel.clientWidth : window.innerWidth - 30;
     const side = Math.min(900, Math.max(280, panelWidth - 2));
@@ -498,7 +389,12 @@
           currentY: Math.random() * (el.canvas.height - state.pieceSize),
           correctX: x * state.pieceSize, correctY: y * state.pieceSize,
           rotation: Math.floor(Math.random() * 4) * ROTATE_STEP,
-          edges: { t: top, r: x === state.gridSize - 1 ? 0 : (Math.random() > 0.5 ? 1 : -1), b: y === state.gridSize - 1 ? 0 : (Math.random() > 0.5 ? 1 : -1), l: left },
+          edges: { 
+            t: top, 
+            r: x === state.gridSize - 1 ? 0 : (Math.random() > 0.5 ? 1 : -1), 
+            b: y === state.gridSize - 1 ? 0 : (Math.random() > 0.5 ? 1 : -1), 
+            l: left 
+          },
           solved: false
         });
       }
@@ -523,7 +419,7 @@
     state.pieces.forEach(p => {
       const cx = p.currentX + state.pieceSize / 2, cy = p.currentY + state.pieceSize / 2;
       const e = p.edges;
-      const dL = e.l === 1 ? tabPx : 0, dR = e.r === 1 ? tabPx : 0, dT = e.t === 1 ? tabPx : 0, dB = e.b === 1 ? tabPx : 0;
+      const dL = e.l === 1 ? tabPx : 0, dT = e.t === 1 ? tabPx : 0;
       const sL = e.l === 1 ? sPadX : 0, sT = e.t === 1 ? sPadY : 0;
 
       ctx.save();
@@ -531,21 +427,16 @@
       ctx.rotate((p.rotation * Math.PI) / 180);
       buildJigsawPath(p);
       ctx.clip();
-
-      // Optimisation ombres : désactiver si trop de pièces ou sur mobile lent
-      if (p === state.selected) {
-        ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 15;
-      } else if (!p.solved) {
-        ctx.shadowColor = "rgba(0,0,0,0.2)"; ctx.shadowBlur = 5;
-      }
-
+      
+      if (p === state.selected) { ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; }
+      
       ctx.drawImage(state.img, p.sx - sL, p.sy - sT, state.srcW + sL + (e.r === 1 ? sPadX : 0), state.srcH + sT + (e.b === 1 ? sPadY : 0), 
-                    -state.pieceSize / 2 - dL, -state.pieceSize / 2 - dT, state.pieceSize + dL + dR, state.pieceSize + dT + dB);
+                    -state.pieceSize / 2 - dL, -state.pieceSize / 2 - dT, state.pieceSize + dL + (e.r === 1 ? tabPx : 0), state.pieceSize + dT + (e.b === 1 ? tabPx : 0));
       ctx.restore();
     });
   }
 
-  // --- Unified Input (Fluidité) ---
+  // --- INPUT MANAGEMENT ---
   function getPos(e) {
     const rect = el.canvas.getBoundingClientRect();
     const bx = e.touches ? e.touches[0].clientX : e.clientX;
@@ -562,7 +453,7 @@
       if (x > p.currentX && x < p.currentX + state.pieceSize && y > p.currentY && y < p.currentY + state.pieceSize) {
         state.selected = p;
         state.offsetX = x - p.currentX; state.offsetY = y - p.currentY;
-        if (e.touches) state.offsetY += 25; // Décalage pour voir la pièce sous le doigt
+        if (e.touches) state.offsetY += 25;
         state.moved = false;
         state.pieces.splice(i, 1); state.pieces.push(p);
         break;
@@ -588,11 +479,45 @@
       const dist = Math.hypot(p.currentX - p.correctX, p.currentY - p.correctY);
       if (dist < state.pieceSize * SNAP_RATIO && p.rotation % 360 === 0) {
         p.currentX = p.correctX; p.currentY = p.correctY; p.solved = true;
-        if (window.navigator.vibrate) window.navigator.vibrate(20); // Retour haptique
-        updateProgressUI(); checkVictory();
+        updateProgressUI();
+        if (state.pieces.every(p => p.solved)) showVictory();
       }
     }
     state.selected = null;
+  }
+
+  // --- NAVIGATION & INIT ---
+  function updateProgressUI() {
+    const solved = state.pieces.filter(p => p.solved).length;
+    const percent = Math.floor((solved / state.pieces.length) * 100);
+    if (el.progressText) el.progressText.textContent = percent + "%";
+    if (el.progressBar) el.progressBar.style.width = percent + "%";
+  }
+
+  function showVictory() {
+    state.active = false;
+    setTimeout(() => {
+      el.victoryModal.hidden = false;
+      el.revealedMessage.textContent = state.message;
+    }, 500);
+  }
+
+  function startPuzzle(imgSrc, diff, msg) {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      state.img = img;
+      state.gridSize = parseInt(diff);
+      state.message = msg;
+      setupCanvas();
+      createPieces();
+      state.active = true;
+      el.setupScreen.hidden = true;
+      el.gameScreen.hidden = false;
+      updateProgressUI();
+      animate();
+    };
+    img.src = imgSrc;
   }
 
   function animate() {
@@ -601,74 +526,56 @@
     state.raf = requestAnimationFrame(animate);
   }
 
-  // --- Initialisation ---
+  function applySettings() {
+    const theme = state.settings.darkMode ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.querySelectorAll("[data-i18n]").forEach(n => n.textContent = t(n.getAttribute("data-i18n")));
+  }
+
   function init() {
     state.settings = loadSettings();
     applySettings();
     renderStaticGallery();
-    
-    // Listeners PointerEvents pour fluidité maximale
+    renderPuzzlesLibrary();
+
+    // Fix NAVIGATION
+    if (el.enterAppBtn) {
+      el.enterAppBtn.onclick = () => {
+        el.welcomeScreen.hidden = true;
+        el.setupScreen.hidden = false;
+      };
+    }
+
+    if (el.backToSetupBtn) {
+      el.backToSetupBtn.onclick = () => {
+        state.active = false;
+        el.gameScreen.hidden = true;
+        el.setupScreen.hidden = false;
+      };
+    }
+
+    // Canvas Events
+    el.canvas.style.touchAction = "none";
     el.canvas.addEventListener("pointerdown", onStart);
     window.addEventListener("pointermove", onMove, { passive: false });
     window.addEventListener("pointerup", onEnd);
-    el.canvas.style.touchAction = "none"; // Vital pour mobile
 
-    // Event delegation pour la galerie et library
+    // Global Actions (Gallery & Library)
     document.addEventListener("click", e => {
       const action = e.target.dataset.action;
-      const pid = e.target.dataset.pid;
-      const gid = e.target.dataset.gid;
-      if (action && pid) handleLibraryAction(action, pid);
-      if (action === "play-gallery" && gid) handleGalleryAction(gid);
+      if (action === "play-gallery") {
+        const item = PRELOADED_GALLERY.find(g => g.id === e.target.dataset.gid);
+        if (item) startPuzzle(item.img, item.diff, "Bravo !");
+      }
+      if (action === "replay") {
+        const entry = loadPuzzlesLibrary().find(en => en.id === e.target.dataset.pid);
+        if (entry) {
+          const p = decodePayload(entry.packed);
+          startPuzzle(p.i, p.d, decodeText(p.m));
+        }
+      }
     });
-
-    // Reste des boutons
-    el.enterAppBtn.onclick = () => { el.welcomeScreen.hidden = true; };
-    el.playNowBtn.onclick = () => { /* Logique Play Now */ };
-    el.backToSetupBtn.onclick = () => { state.active = false; el.gameScreen.hidden = true; el.setupScreen.hidden = false; };
   }
-
-  // Fonctions manquantes pour la cohérence
-  function updateProgressUI() {
-    const solved = state.pieces.filter(p => p.solved).length;
-    const total = state.pieces.length;
-    const percent = total ? Math.floor((solved / total) * 100) : 0;
-    if (el.progressText) el.progressText.textContent = `${percent}%`;
-    if (el.progressBar) el.progressBar.style.width = `${percent}%`;
-  }
-  
-  function checkVictory() {
-    if (state.pieces.every(p => p.solved)) {
-      setTimeout(() => {
-        el.victoryModal.hidden = false;
-        if (el.revealedMessage) el.revealedMessage.textContent = state.message;
-      }, 500);
-    }
-  }
-
-  function startPuzzle(imgSrc, diff, msg, packed) {
-    const img = new Image();
-    img.onload = () => {
-      state.img = img;
-      state.gridSize = parseInt(diff);
-      state.message = msg;
-      state.active = true;
-      el.setupScreen.hidden = true;
-      el.gameScreen.hidden = false;
-      setupCanvas();
-      createPieces();
-      updateProgressUI();
-      animate();
-    };
-    img.src = imgSrc;
-  }
-
-  function loadPuzzle(payload) {
-    startPuzzle(payload.i, payload.d, decodeText(payload.m), null);
-  }
-
-  function updateHintUI() { /* à implémenter si besoin */ }
-  function updateConnectionBanner() { /* à implémenter si besoin */ }
 
   init();
 })();
