@@ -17,12 +17,7 @@
   const HINT_TOTAL = 1;
 
   const PRELOADED_GALLERY = [
-    {
-      id: "gal-01",
-      diff: "4",
-      title: "Cité d'Néon",
-      img: "https://images.unsplash.com/photo-1510133744874-096eceeb0dcb?q=80&w=800&auto=format&fit=crop"
-    },
+
     {
       id: "gal-02",
       diff: "6",
