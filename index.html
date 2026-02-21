@@ -12,39 +12,39 @@
   <link rel="apple-touch-icon" sizes="192x192" href="icons/toi-192.png" />
   <style>
     :root {
-      --bg: #030508;
-      --bg-grad-1: #0a1128;
-      --bg-grad-2: #020b14;
-      --surface: #0a0f1d;
-      --surface-2: #111a2f;
-      --text: #e0e6ed;
-      --muted: #798b9e;
-      --line: rgba(0, 240, 255, 0.15);
-      --accent: #00f0ff;
-      --accent-2: #b500ff;
-      --btn-secondary: rgba(0, 240, 255, 0.05);
-      --warn: #ffaa00;
-      --ok: #00ff88;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-      --glow: 0 0 15px rgba(0, 240, 255, 0.4);
+      --bg: #09090b;
+      --bg-grad-1: #180b2a;
+      --bg-grad-2: #05141e;
+      --surface: #121216;
+      --surface-2: #1f1f26;
+      --text: #f0f0f5;
+      --muted: #8b8e99;
+      --line: rgba(252, 238, 12, 0.25);
+      --accent: #fcee0c;
+      --accent-2: #02d7f2;
+      --btn-secondary: rgba(2, 215, 242, 0.1);
+      --warn: #ff003c;
+      --ok: #39ff14;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      --glow: 0 0 15px rgba(252, 238, 12, 0.4);
     }
 
     html[data-theme="light"] {
-      --bg: #f4f7f6;
-      --bg-grad-1: #e2e8e4;
+      --bg: #f4f4f4;
+      --bg-grad-1: #e9e9e9;
       --bg-grad-2: #ffffff;
       --surface: #ffffff;
-      --surface-2: #e9ecef;
-      --text: #050505;
-      --muted: #6c757d;
-      --line: rgba(0, 0, 0, 0.1);
-      --accent: #ff5e00;
-      --accent-2: #007bff;
-      --btn-secondary: rgba(255, 94, 0, 0.05);
-      --warn: #d97706;
-      --ok: #059669;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      --glow: 0 0 15px rgba(255, 94, 0, 0.3);
+      --surface-2: #ebebeb;
+      --text: #1a1a1a;
+      --muted: #666666;
+      --line: rgba(255, 0, 60, 0.2);
+      --accent: #ff003c;
+      --accent-2: #02d7f2;
+      --btn-secondary: rgba(2, 215, 242, 0.1);
+      --warn: #ff8c00;
+      --ok: #00cc44;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --glow: 0 0 15px rgba(255, 0, 60, 0.3);
     }
 
     * {
@@ -77,13 +77,25 @@
 
     .splash-card {
       width: min(760px, 100%);
-      border: 1px solid var(--line);
+      border: 1px solid var(--accent-2);
       border-radius: 4px;
       padding: clamp(2rem, 5vw, 3rem);
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.05);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(2, 215, 242, 0.1);
       text-align: center;
+      position: relative;
+    }
+
+    .splash-card::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      height: 4px;
+      background: var(--accent);
+      box-shadow: var(--glow);
     }
 
     .splash-badge {
@@ -173,7 +185,7 @@
       font-size: 1.28rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      text-shadow: 0 0 5px var(--accent);
+      text-shadow: 2px 2px 0px rgba(2, 215, 242, 0.5);
     }
 
     .brand-copy p {
@@ -233,18 +245,18 @@
     }
 
     .btn-main {
-      background: rgba(0, 240, 255, 0.1);
+      background: rgba(252, 238, 12, 0.1);
     }
 
     .btn-secondary {
-      border-color: var(--muted);
-      color: var(--muted);
+      border-color: var(--accent-2);
+      color: var(--accent-2);
     }
 
     .btn-secondary:hover {
-      background: var(--muted);
+      background: var(--accent-2);
       color: #000;
-      box-shadow: 0 0 15px var(--muted);
+      box-shadow: 0 0 15px var(--accent-2);
     }
 
     .btn-ghost {
@@ -965,6 +977,13 @@
           <p id="setup-preview-empty" class="setup-preview-empty" data-i18n="preview_empty">Selectionne une image pour
             l'afficher en grand ici. Clique l'image pour zoom.</p>
         </aside>
+      </div>
+    </section>
+
+    <section id="gallery-section" class="card saved-puzzles">
+      <h3 class="saved-head" data-i18n="gallery_title">BANQUES DE DONNÉES INTRUSIVES (Jouer)</h3>
+      <div id="gallery-list" class="saved-grid">
+        <!-- Gallery cards will be injected here via JS -->
       </div>
     </section>
 

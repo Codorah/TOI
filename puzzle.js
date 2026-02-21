@@ -16,6 +16,21 @@
   const ROTATE_STEP = 90;
   const HINT_TOTAL = 1;
 
+  const PRELOADED_GALLERY = [
+    {
+      id: "gal-01",
+      diff: "4",
+      title: "Cité d'Néon",
+      img: "https://images.unsplash.com/photo-1510133744874-096eceeb0dcb?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      id: "gal-02",
+      diff: "6",
+      title: "Réseau Neural",
+      img: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop"
+    }
+  ];
+
   const DEFAULT_SETTINGS = { profileName: "", language: "fr", darkMode: true };
   const THEME_COLORS = { dark: "#ff4f5d", light: "#2f4dde" };
 
@@ -207,7 +222,8 @@
     restartBtn: document.getElementById("restart-btn"),
     lightbox: document.getElementById("reference-lightbox"),
     lightboxImage: document.getElementById("reference-lightbox-image"),
-    closeReferenceBtn: document.getElementById("close-reference-btn")
+    closeReferenceBtn: document.getElementById("close-reference-btn"),
+    galleryList: document.getElementById("gallery-list")
   };
 
   const ctx = el.canvas.getContext("2d");
@@ -328,7 +344,7 @@
     }
     try {
       localStorage.removeItem(PUZZLES_LIBRARY_KEY);
-    } catch {}
+    } catch { }
     return [];
   }
 
@@ -469,6 +485,51 @@
     el.myPuzzlesEmpty.hidden = hasValid;
   }
 
+  function renderStaticGallery() {
+    if (!el.galleryList) return;
+    el.galleryList.innerHTML = "";
+
+    PRELOADED_GALLERY.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "saved-card";
+
+      const image = document.createElement("img");
+      image.className = "saved-thumb";
+      image.src = item.img;
+      image.alt = item.title;
+      card.appendChild(image);
+
+      const body = document.createElement("div");
+      body.className = "saved-body";
+
+      const title = document.createElement("p");
+      title.className = "saved-title";
+      title.textContent = item.title;
+      body.appendChild(title);
+
+      const meta = document.createElement("p");
+      meta.className = "saved-meta";
+      meta.textContent = "Diff.: " + dict().diff[item.diff];
+      meta.style.color = "var(--accent)";
+      body.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "saved-actions";
+
+      const playBtn = document.createElement("button");
+      playBtn.type = "button";
+      playBtn.className = "btn btn-main";
+      playBtn.dataset.action = "play-gallery";
+      playBtn.dataset.gid = item.id;
+      playBtn.textContent = "LANCER L'EXTRATION";
+      actions.appendChild(playBtn);
+
+      body.appendChild(actions);
+      card.appendChild(body);
+      el.galleryList.appendChild(card);
+    });
+  }
+
   async function handleLibraryAction(action, puzzleId) {
     const entries = loadPuzzlesLibrary();
     const entry = entries.find((item) => item.id === puzzleId);
@@ -500,6 +561,15 @@
         setStatusKey("status_error_generate", "warn");
       }
     }
+  }
+
+  function handleGalleryAction(galleryId) {
+    const item = PRELOADED_GALLERY.find((g) => g.id === galleryId);
+    if (!item) return;
+
+    // Load as a direct puzzle rather than from packed payload
+    enterApp();
+    startPuzzle(item.img, item.diff, "Archive réseau déchiffrée avec succès. Bien joué.", null);
   }
 
   function normalizeSettings(raw) {
@@ -1174,7 +1244,7 @@
   function registerSW() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch(() => {});
+      navigator.serviceWorker.register("./sw.js").catch(() => { });
     });
   }
 
@@ -1225,6 +1295,14 @@
       if (!btn) return;
       handleLibraryAction(btn.dataset.action, btn.dataset.pid);
     });
+
+    if (el.galleryList) {
+      el.galleryList.addEventListener("click", (event) => {
+        const btn = event.target.closest("button[data-action='play-gallery']");
+        if (!btn) return;
+        handleGalleryAction(btn.dataset.gid);
+      });
+    }
 
     el.referenceImage.addEventListener("click", () => {
       if (el.referenceImage.src) openLightbox(el.referenceImage.src);
@@ -1308,6 +1386,7 @@
     el.victoryModal.hidden = true;
     updateHintUI();
     updateProgressUI();
+    renderStaticGallery();
 
     try {
       const payload = payloadFromUrl();
