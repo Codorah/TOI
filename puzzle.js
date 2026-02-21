@@ -114,6 +114,7 @@
       local_default_message: "Puzzle local sans message secret.",
       status_saved_puzzle: "Puzzle ajoute a Mes puzzles.",
       status_offline_diff: "Les modes de difficulté supérieurs à 10x10 (Titan, Insane) nécessitent une connexion Internet.",
+      back_to_setup: "← Retour",
       diff: { "4": "Facile (4x4)", "6": "Moyen (6x6)", "8": "Difficile (8x8)", "10": "Expert (10x10)", "20": "Titan (20x20)", "50": "Insane (50x50)" }
     },
     en: {
@@ -183,6 +184,7 @@
       local_default_message: "Local puzzle without secret message.",
       status_saved_puzzle: "Puzzle added to My puzzles.",
       status_offline_diff: "Difficulty modes higher than 10x10 (Titan, Insane) require an internet connection.",
+      back_to_setup: "← Back",
       diff: { "4": "Easy (4x4)", "6": "Medium (6x6)", "8": "Hard (8x8)", "10": "Expert (10x10)", "20": "Titan (20x20)", "50": "Insane (50x50)" }
     }
   };
@@ -234,6 +236,7 @@
     revealedMessage: document.getElementById("revealed-message"),
     shareVictoryBtn: document.getElementById("share-victory-btn"),
     restartBtn: document.getElementById("restart-btn"),
+    backToSetupBtn: document.getElementById("back-to-setup-btn"),
     lightbox: document.getElementById("reference-lightbox"),
     lightboxImage: document.getElementById("reference-lightbox-image"),
     closeReferenceBtn: document.getElementById("close-reference-btn"),
@@ -1358,6 +1361,15 @@
       shareCurrentPuzzle().catch(() => setStatusKey("status_error_generate", "warn"));
     });
     el.restartBtn.addEventListener("click", () => { location.href = window.location.pathname; });
+
+    if (el.backToSetupBtn) {
+      el.backToSetupBtn.addEventListener("click", () => {
+        el.gameScreen.hidden = true;
+        el.setupScreen.hidden = false;
+        state.active = false;
+        cancelAnimationFrame(state.raf);
+      });
+    }
 
     el.canvas.addEventListener("pointerdown", onPointerDown);
     el.canvas.addEventListener("pointermove", onPointerMove);
