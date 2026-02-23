@@ -1,9 +1,9 @@
-﻿const CACHE_NAME = "toi-puzzle-v5";
+﻿const CACHE_NAME = "toi-puzzle-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./puzzle.js",
-  "./puzzle.js?v=20260221-1",
+  "./puzzle.js?v=20260223-1",
   "./manifest.json",
   "./icons/toi-192.png",
   "./icons/toi-512.png"
@@ -82,3 +82,4 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
